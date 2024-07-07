@@ -1,0 +1,75 @@
+﻿@using RedirectTest.Models.ViewModels
+@{
+    Layout = "_Layout";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@model ProfileViewModel
+
+<div class="row">
+    <div class="col-10">
+        <div class="badge bg-dark py-2 px-2 mb-3">Profile Settings</div>
+        <div class="flex-row d-flex flex-lg-column">
+            <div class="mb-3">
+                <div>
+                    <label id="profileImagePreview" for="profileImageInput" class="round-image-profile my-2" style="background-image:url('/RedirectTestStatic/ProfileImages/@Model.ProfileImageName')" />
+                </div>
+                <div class="mb-1 text-secondary" style="font-size:13px">Upload a new profile image. Don't forget to confirm the changes by pressing the button below.</div>
+                <form enctype="multipart/form-data" method="post" action="/RedirectTest/Profile/ChangeProfileImage">
+                    <div hidden class="mb-1">
+                        <input id="profileImageInput" class="form-control" name="newProfileImage" type="file" accept="image/png" />
+                    </div>
+                    <input class="btn-primary px-1 py-1" type="submit" value="Change Profile Image" />
+                </form>
+            </div>
+            <div>
+                <div class="mb-3">
+                    <form method="post" action="/RedirectTest/Profile/ChangeNickname">
+                        <div class="mb-1">
+                            <label class="form-label my-1 fw-bold" for="newNickname">Nickname:</label>
+                            <input id="newNickname" class="form-control" name="newNickname" type="text" value="@Model.NickName" />
+                        </div>
+                        <div class="my-1 text-secondary" style="font-size:13px">When you create a shared article or post a comment other users will see you under this nickname</div>
+                        <input class="btn-primary px-1 py-1" type="submit" value="Change Nickname" />
+                    </form>
+                </div>
+                <div class="mb-3">
+                    <form method="post" action="/RedirectTest/Profile/ChangePassword">
+                        <div class="mb-1">
+                            <label class="form-label my-1 fw-bold" for="Content">Password: </label>
+                            <input id="Content" class="form-control" name="Content" type="password" />
+                        </div>
+                        <div class="my-1 text-secondary" style="font-size:13px">The application does not display your current password. To change the password just type a new one and submit a form</div>
+                        <input class="btn-primary px-1 py-1" type="submit" value="Change Password" />
+                    </form>
+                </div>
+             @*    <div class="mb-3">
+                    <form method="post" action="/RedirectTest/Profile/ChangeBaseApiUrl">
+                        <input name="Id" type="hidden" value="@Model.Id" />
+                        <div class="mb-1">
+                            <label class="form-label my-1 fw-bold" for="NewBaseApiUrl">Base Api Url:</label>
+                            <input id="NewBaseApiUrl" class="form-control" name="NewBaseApiUrl" type="text" value="@Model.BaseApiUrl" />
+                        </div>
+                        <div class="my-1 text-secondary" style="font-size:13px">This is the location of the resource where RedirectTest application stores comments for the articles. Format {domain name} or {ip : port} </div>
+                        <input class="btn-primary px-1 py-1" type="submit" value="Change Base Api Url" />
+                    </form>
+                </div> *@
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const imageInput = document.getElementById("profileImageInput");
+    const previewImage = document.getElementById("profileImagePreview");
+
+    imageInput.addEventListener('change', function (e) {
+        if(e.target.files && e.target.files[0]){
+            const reader = new FileReader();
+            reader.onload = function (e2) {
+                previewImage.style.backgroundImage = `url(${e2.target.result})`;
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    });
+</script>                            

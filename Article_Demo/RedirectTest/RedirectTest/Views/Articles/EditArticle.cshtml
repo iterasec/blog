@@ -1,0 +1,40 @@
+﻿@using RedirectTest.Models.ViewModels
+@{
+    Layout = "_Layout";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@model ArticleViewModel
+
+<div class="row">
+    <div class="col-10">
+        <div class="badge bg-dark py-2 px-2 mb-3">Editing Article</div>
+        <div>
+            <form action="/RedirectTest/Articles/EditArticle" method="post">
+                <input name="ArticleId" type="hidden" value="@Model.ArticleId" />
+                <div class="mb-3">
+                    <label class="form-label" for="Title">Title:</label>
+                    <input class="form-control" id="Title" type="text" name="Title" value="@Model.Title" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="Content">Content:</label>
+                    <textarea style="min-height:600px;" class="form-control" id="Content" name="Content">@Model.Content</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="IsShared">Is Shared?</label>
+                    @if (Model.IsShared)
+                    {
+                        <input id="IsShared" name="IsShared" class="form-check" type="checkbox" checked />
+                    }
+                    else
+                    {
+                        <input id="IsShared" name="IsShared" class="form-check" type="checkbox" />
+                    }
+                </div>
+                <input class="btn-lg btn-primary" type="submit" value="Edit Article" />
+            </form>
+        </div>
+    </div>
+</div>
+
+

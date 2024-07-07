@@ -1,0 +1,68 @@
+﻿@using RedirectTest.Models.ViewModels
+@{
+    Layout = "_Layout";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@model IList<RedirectTest.Models.ViewModels.ArticleViewModel>;
+
+
+<a class="btn-lg btn-primary text-decoration-none" href="/RedirectTest/ArticlesJs/CreateArticle">Create Article</a>
+
+<div class="col-10">
+    @foreach (ArticleViewModel article in Model)
+    {
+        <div class="article-entry">
+            <span class="identifier" style="display:none">@article.OldApi</span>
+            <div class="row my-3 bg-light">
+                <div class="d-flex flex-row justify-content-between align-items-center pt-2">
+                    <div>
+                        <img class="round-image" src="/RedirectTestStatic/ProfileImages/@article.AuthorProfileImage" />
+                        <span class="fw-bolder">@article.AuthorNickname</span>
+                    </div>
+                    @if (article.IsShared)
+                    {
+                        <div class="badge bg-success py-2">Shared Article</div>
+                    }
+                </div>
+                <a class="fs-2 fw-bold" href="/RedirectTest/ArticlesJs/ViewArticle?articleId=@article.ArticleId">@article.Title</a>
+                <div>
+                    <div style="max-height:400px; overflow:hidden; white-space: pre-wrap; font-family:monospace" class="border py-2 px-2 my-2">@article.Content</div>
+                    @if (article.AuthorId == ViewBag.userId)
+                    {
+                        <div class="my-3">
+                            <a class="btn btn-warning mr-2 fw-bold" href="/RedirectTest/ArticlesJs/EditArticle?articleId=@article.ArticleId">Edit Article</a>
+                            <input type="hidden" value="@article.ArticleId">
+                            <button class="del-article-btn btn btn-danger m-lg-2 fw-bold">Delete Article</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    var btns = document.getElementsByClassName("del-article-btn");
+    for (var i = 0; i < btns.length; i++) {
+        btns[i].addEventListener('click', (e) => {
+            var articleId = e.target.previousElementSibling.value;
+
+            var obj = { "articleId": articleId }
+            var json_string = JSON.stringify(obj);
+
+            fetch("/RedirectTest/ArticlesJs/DeleteArticle", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: json_string
+            }).then(response => {
+                if (response.ok) {
+                    window.location.href = "/RedirectTest/ArticlesJs/Show";
+                }
+            })
+
+        });
+    }
+</script>

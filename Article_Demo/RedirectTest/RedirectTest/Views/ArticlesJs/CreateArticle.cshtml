@@ -1,0 +1,53 @@
+﻿@{
+    Layout = "_Layout";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+
+
+<div class="row">
+    <div class="col-10">
+        <div class="badge bg-dark py-2 px-2 mb-3">Creating New Article</div>
+        <div>
+            <div class="mb-3">
+                <label class="form-label" for="Title">Title:</label>
+                <input class="form-control" id="Title" type="text" name="Title" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="Content">Content:</label>
+                <textarea style="min-height:600px;" class="form-control" id="Content" name="Content"></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="IsShared">Is Shared?</label>
+                <input id="IsShared" name="IsShared" type="checkbox" />
+            </div>
+            <button id="create-article-btn" class="btn-lg btn-primary" type="submit">Create Article</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("create-article-btn").addEventListener("click", (event) => {
+
+        var title = document.getElementById("Title").value;
+        var content = document.getElementById("Content").value;
+        var isShared = document.getElementById("IsShared").checked ? "true" : "";
+
+        var obj = { "Title": title, "Content": content, "IsShared": isShared };
+        var json_string = JSON.stringify(obj);
+
+        fetch("/RedirectTest/ArticlesJs/CreateArticle", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: json_string
+        }).then(response => {
+            if (response.ok) {
+                window.location = "/RedirectTest/ArticlesJs/Show";
+            }
+        })
+
+    });
+</script>
+

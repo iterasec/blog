@@ -1,0 +1,60 @@
+﻿@using System.Security.Claims
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - RedirectTest</title>
+    <link rel="stylesheet" href="/RedirectTestStatic/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/RedirectTestStatic/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-lg">
+                <a class="navbar-brand" href="/RedirectTest/Home/Index">RedirectTest</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        @if(Context.User.Identity == null || !Context.User.Identity.IsAuthenticated)
+                        {                     
+                            <li style="margin-left:auto;margin-right:0px" class="nav-item">
+                                <a style="margin-left:auto;margin-right:0px" class="nav-link text-dark" href="/RedirectTest/Accounts/Login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a style="margin-left:auto;margin-right:0px;" class="nav-link text-dark" href="/RedirectTest/Accounts/Register">Register</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/RedirectTest/Profile/Me">Profile</a>
+                            </li>
+                            <li class="nav-item" style="margin-left:auto;margin-right:auto;line-height:40px">
+                                <img style="width:30px;height:30px;" src="/RedirectTestStatic/ProfileImages/@Context.Items["ProfileImageName"]" />
+                                <span>@Context.Items["Nickname"]</span>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/RedirectTest/Accounts/Logout">Logout</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <script src="/RedirectTestStatic/lib/jquery/dist/jquery.min.js"></script>
+    <script src="/RedirectTestStatic/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/RedirectTestStatic/js/site.js" asp-append-version="true"></script>
+    <script src="/RedirectTestStatic/js/purify.min.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

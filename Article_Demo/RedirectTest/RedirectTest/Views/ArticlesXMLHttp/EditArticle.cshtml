@@ -1,0 +1,60 @@
+﻿@{
+    Layout = "_Layout";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+
+
+<div class="row">
+    <div class="col-10">
+        <div class="badge bg-dark py-2 px-2 mb-3">Editing Article</div>
+        <div>
+            <input id="ArticleId" name="ArticleId" type="hidden" value="@Model.ArticleId" />
+            <div class="mb-3">
+                <label class="form-label" for="Title">Title:</label>
+                <input class="form-control" id="Title" type="text" name="Title" value="@Model.Title" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="Content">Content:</label>
+                <textarea style="min-height:600px;" class="form-control" id="Content" name="Content">@Model.Content</textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="IsShared">Is Shared?</label>
+                @if (Model.IsShared)
+                {
+                    <input id="IsShared" name="IsShared" class="form-check" type="checkbox" checked />
+                }
+                else
+                {
+                    <input id="IsShared" name="IsShared" class="form-check" type="checkbox" />
+                }
+            </div>
+            <button id="edit-article-btn" class="btn-lg btn-primary" type="submit">Edit Article</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("edit-article-btn").addEventListener("click", (event) => {
+
+        var articleId = document.getElementById("ArticleId").value;
+        var title = document.getElementById("Title").value;
+        var content = document.getElementById("Content").value;
+        var isShared = document.getElementById("IsShared").checked ? "true" : "";
+
+        var obj = { "ArticleId": articleId, "Title": title, "Content": content, "IsShared": isShared };
+        var json_string = JSON.stringify(obj);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/RedirectTest/ArticlesXMLHttp/EditArticle", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.withCredentials = true;
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+                window.location.href = "/RedirectTest/ArticlesXMLHttp/Show";
+            }
+        };
+        xhr.send(json_string);
+
+    });
+</script>

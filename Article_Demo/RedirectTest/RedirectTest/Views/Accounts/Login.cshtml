@@ -1,0 +1,22 @@
+﻿@{
+    Layout = "_Layout";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+
+<div class="row">
+    <div class="col-4">
+        <form action="/RedirectTest/Accounts/Login" method="post">
+            <div class="mb-3">
+                <label class="form-label" for="name">Email:</label><br />
+                <input class="form-text form-control" name="Email" type="email" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="Password">Password:</label><br />
+                <input class="form-text form-control" name="Password" type="password" />
+            </div>
+            <input class="btn-lg btn-primary" type="submit" value="Login">
+        </form>
+    </div>
+</div>
+

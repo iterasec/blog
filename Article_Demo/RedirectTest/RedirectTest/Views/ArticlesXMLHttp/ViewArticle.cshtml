@@ -1,0 +1,136 @@
+﻿@{
+    Layout = "_Layout";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@model ArticleViewModel
+@using Microsoft.Extensions.Configuration
+@using RedirectTest.Models.ViewModels
+@inject IConfiguration Configuration
+
+<div class="row">
+    <div class="col-10">
+        <div class="badge bg-dark py-2 px-2 mb-3">Viewing Article</div>
+        <div>
+            <img src="/RedirectTestStatic/ProfileImages/@Model.AuthorProfileImage" style="width:50px;height:50px; border-radius:50%;" />
+            <span class="fw-bolder">@Model.AuthorNickname</span>
+        </div>
+        <div>
+            <div class="fs-2 fw-bold">@Model.Title</div>
+            <div style="white-space:pre-wrap;font-family:monospace" class="bg-light px-3 py-3">@Model.Content</div>
+        </div>
+        <hr />
+        <div id="comments-cont">
+            @*     <div class="my-2 px-3 bg-light">
+            <div class="fw-bolder">
+            @comment.AuthorEmail
+            </div>
+            <div class="mx-2">
+            @comment.Content
+            </div>
+            </div>  *@
+        </div>
+        <hr />
+        <div>
+            <input id="articleId" name="articleId" type="hidden" value="@Model.ArticleId" />
+            <input id="authorId" name="AuthorId" type="hidden" value="@ViewBag.CommentAuthorId" />
+            <input id="authorNickname" name="AuthorNickname" type="hidden" value="@ViewBag.CommentAuthorNickname" />
+            <input id="authorProfileImageName" name="authorProfileImageName" type="hidden" value="@ViewBag.CommentAuthorProfileImageName" />
+            <div>
+                <label class="form-label" for="Content">Comment:</label>
+                <textarea class="form-control" id="Content" name="Content"></textarea>
+            </div>
+            <button id="post-comment-btn" class="btn-sm btn-primary my-2" type="submit">Post Comment</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    var jwt_token = "@ViewBag.Token";
+
+    function getComments() {
+        var articleId = document.getElementById("articleId").value;
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", '@Configuration["Protocol"]://@ViewBag.BaseUrl/Social/CommentsJs/GetComments?articleId=' + articleId, true);
+        xhr.withCredentials = true;
+        xhr.setRequestHeader("Authorization", "Bearer " + jwt_token);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+                var commentsContainer = document.getElementById("comments-cont");
+                commentsContainer.innerHTML = "";
+                var data = JSON.parse(xhr.responseText);
+
+                for (var i = 0; i < data.length; i++) {
+                    var box = document.createElement("div");
+                    box.classList.add("my-2", "px-3", "bg-light");
+
+                    var flex_div = document.createElement("div");
+                    flex_div.classList.add("fw-bolder", "pt-2", "d-flex", "flex-row", "justify-content-between", "align-items-center");
+
+                    var inner_flex_div_1 = document.createElement("div");
+                    var profileImage = document.createElement("img");
+                    profileImage.classList.add("round-image");
+                    profileImage.src = "/RedirectTestStatic/ProfileImages/" + data[i].authorProfileImageName;
+
+                    var nickname = document.createElement("span");
+                    nickname.classList.add("mx-2");
+                    nickname.innerHTML = DOMPurify.sanitize(data[i].authorNickname);
+
+                    var inner_flex_div_2 = document.createElement("div");
+                    inner_flex_div_2.classList.add("fw-light");
+
+                    var dateTimeSpan = document.createElement("span");
+                    dateTimeSpan.innerHTML = DOMPurify.sanitize(data[i].postDateTime);
+
+                    var commentCont = document.createElement("div");
+                    commentCont.innerHTML = DOMPurify.sanitize(data[i].content);
+                    commentCont.classList.add("mx-2", "py-2");
+
+                    commentsContainer.appendChild(box);
+                    box.append(flex_div, commentCont);
+                    flex_div.append(inner_flex_div_1, inner_flex_div_2);
+                    inner_flex_div_1.append(profileImage, nickname);
+                    inner_flex_div_2.append(dateTimeSpan);
+                }
+            }
+        }
+
+        xhr.onerror = (error) => {
+            alert(error);
+        }
+
+        xhr.send();
+    }
+
+
+    document.addEventListener("DOMContentLoaded", getComments);
+
+    document.getElementById("post-comment-btn").addEventListener("click", (event) => {
+        var articleId = document.getElementById("articleId").value;
+        var authorId = document.getElementById("authorId").value;
+        var authorNickname = document.getElementById("authorNickname").value;
+        var authorProfileImageName = document.getElementById("authorProfileImageName").value;
+        var content = document.getElementById("Content").value;
+
+        var obj = { "ArticleId": articleId, "AuthorId": authorId, "AuthorNickname": authorNickname, "AuthorProfileImageName": authorProfileImageName, "Content": content };
+        var json_string = JSON.stringify(obj);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "@Configuration["Protocol"]://@ViewBag.BaseUrl/Social/CommentsJs/PostComment", true);
+        xhr.withCredentials = true;
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader("Authorization", "Bearer " + jwt_token);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+                getComments();
+            }
+        };
+
+        xhr.onerror = function (error) {
+            alert(error);
+        }
+
+        xhr.send(json_string);
+    });
+</script>

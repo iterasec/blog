@@ -1,0 +1,70 @@
+html {
+    font-size: 14px;
+}
+
+.bg-color {
+    background-color: #fdfcdc;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.round-image {
+    padding:3px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid gray
+}
+
+.round-image-profile {
+    border-radius: 50%;
+    border: 1px solid gray;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100px;
+    width: 100px;
+    background-size:90px 90px;
+}
+
+.about-head {
+    text-align: center;
+    font-size: 50px;
+    margin-bottom: 50px;
+    padding-bottom: 5px;
+    color: #9d8189;
+    border-bottom: 1px solid #9d8189;
+}
+
+.about-text {
+    font-size: 20px;
+    color: #9d8189;
+    line-height: 30px;
+}
+
+    .about-text > a {
+        color: blueviolet;
+    }
+
+.about-main-cont {
+    margin-left: auto;
+    margin-right: auto;
+    width: 1080px;
+    margin-top: 100px;
+}

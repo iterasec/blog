@@ -1,0 +1,31 @@
+﻿@{
+    Layout = "_Layout";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+
+
+<div class="row">
+    <div class="col-10">
+        <div class="badge bg-dark py-2 px-2 mb-3">Creating New Article</div>
+        <div>
+            <form action="/RedirectTest/Articles/CreateArticle" method="post">
+                <div class="mb-3">
+                    <label class="form-label" for="Title">Title:</label>
+                    <input class="form-control" id="Title" type="text" name="Title" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="Content">Content:</label>
+                    <textarea style="min-height:600px;" class="form-control" id="Content" name="Content"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="IsShared">Is Shared?</label>
+                    <input id="IsShared" name="IsShared" type="checkbox"/>
+                </div>
+                <input class="btn-lg btn-primary" type="submit" value="Create Article" />
+            </form>
+        </div>
+    </div>
+</div>
+
+

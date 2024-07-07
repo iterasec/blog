@@ -1,0 +1,59 @@
+﻿@{
+    Layout = "_Layout";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@model ArticleViewModel
+@using Microsoft.Extensions.Configuration
+@using RedirectTest.Models.ViewModels
+@inject IConfiguration Configuration
+
+
+<div class="row">
+    <div class="col-10">
+        <div class="badge bg-dark py-2 px-2 mb-3">Viewing Article</div>
+        <div>
+            <img src="/RedirectTestStatic/ProfileImages/@Model.AuthorProfileImage" style="width:50px;height:50px; border-radius:50%;" />
+            <span class="fw-bolder">@Model.AuthorNickname</span>
+        </div>
+        <div>
+            <div class="fs-2 fw-bold">@Model.Title</div>
+            <div style="white-space:pre-wrap;font-family:monospace" class="bg-light px-3 py-3">@Model.Content</div>
+        </div>
+        <hr />
+        @foreach (var comment in ViewBag.Comments)
+        {
+            <div class="my-2 px-3 bg-light">
+                <div class="fw-bolder pt-2 d-flex flex-row justify-content-between align-items-center">
+                    <div>
+                        <img class="round-image" src="/RedirectTestStatic/ProfileImages/@comment.AuthorProfileImageName" />
+                        <span>@comment.AuthorNickname</span>
+                    </div>
+                    <div class="fw-light">
+                        <span>@comment.PostDateTime.ToString("MM/dd/yyyy h:mm tt")</span>
+                    </div>
+                </div>
+                <div class="mx-2 py-2">
+                    @comment.Content
+                </div>
+            </div>
+        }
+        <hr />
+        <div>
+            <form action="@Configuration["Protocol"]://@ViewBag.BaseUrl/Social/Comments/PostComment" method="post">
+                <input name="ArticleId" type="hidden" value="@Model.ArticleId" />
+                <input name="AuthorId" type="hidden" value="@ViewBag.CommentAuthorId" />
+                <input name="AuthorNickname" type="hidden" value="@ViewBag.CommentAuthorNickname" />
+                <input name="AuthorProfileImageName" type="hidden" value="@ViewBag.CommentAuthorProfileImageName"/>
+                <div>
+                    <label class="form-label" for="Content">Comment:</label>
+                    <textarea class="form-control" id="Content" name="Content"></textarea>
+                </div>
+                <input class="btn-sm btn-primary my-2" type="submit" value="PostComment" />
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
